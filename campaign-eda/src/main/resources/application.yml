@@ -1,0 +1,41 @@
+spring:
+  cloud:
+    function:
+      definition: campaignData
+    stream:
+      default-binder: solace-demo-eda
+      bindings:
+        campaignData-in-0:
+          destination: CAMP.REQ.Q
+          group: PROCESSOR
+          consumer:
+            max-attempts: 3
+            concurrency: 50
+        campaignData-out-0:
+          destination: camp/res/defaulttopic
+      binders:
+        solace-demo-eda:
+          type: solace
+          environment:
+            solace:
+              java:
+                host: tcp://solace-demo-eda:55555
+                msgVpn: default
+                clientUsername: default
+                clientPassword: default
+                connectRetries: -1
+                reconnectRetries: -1
+      solace:
+        bindings:
+          campaignData-in-0:
+            consumer:
+              queueAdditionalSubscriptions:
+                - 'camp/req/>'
+logging:
+  level:
+    root: INFO
+    com.solacesystems.jcsmp: INFO
+    org.springframework: INFO
+    
+server:
+  port: 8094

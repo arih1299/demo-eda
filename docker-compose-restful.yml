@@ -1,0 +1,16 @@
+version: '2'
+services:
+  bff:
+    container_name: bff
+    image: bff
+    ports:
+      - '8081:8081'
+    environment: 
+      - BACKEND_URL=http://campaign-rest:8082
+      - BACKEND_USER=dummy
+      - BACKEND_PASS=dummy
+  campaign-rest:
+    container_name: campaign-rest
+    image: campaign-rest
+    ports: 
+      - '8082:8082'

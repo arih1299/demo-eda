@@ -1,0 +1,41 @@
+version: '2'
+services:
+  bff:
+    container_name: bff
+    image: bff
+    ports: 
+      - '8081:8081'
+    environment: 
+      - BACKEND_URL=http://solace-demo-eda:9000/camp/req/test123
+      - BACKEND_USER=default
+      - BACKEND_PASS=default
+  campaign-eda:
+    container_name: campaign-eda
+    image: campaign-eda
+  callback-handler:
+    container_name: callback-handler
+    image: callback-handler
+  solace:
+    container_name: solace-demo-eda
+    image: solace/solace-pubsub-standard:latest
+    shm_size: 1g
+    ulimits:
+      core: 1
+      nofile:
+        soft: 2448
+        hard: 6592
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 1
+    ports:
+      #Web transport
+      - '8008:8008'
+      #SEMP / PubSub+ Manager
+      - '8080:8080'
+      #REST Default VPN
+      - '9000:9000'
+    environment:
+      - username_admin_globalaccesslevel=admin
+      - username_admin_password=admin
+      - system_scaling_maxconnectioncount=100
