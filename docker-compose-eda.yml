@@ -24,10 +24,6 @@ services:
       nofile:
         soft: 2448
         hard: 6592
-    deploy:
-      restart_policy:
-        condition: on-failure
-        max_attempts: 1
     ports:
       #Web transport
       - '8008:8008'
